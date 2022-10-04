@@ -1,0 +1,469 @@
+<template>
+  <div class="container">
+    <!-- <div class="filtBox " :style="classs">
+      <div class="mainminibox">
+        <div class="miniBox">
+
+          <select v-model="f1.store">
+            <option value="">Все</option>
+            <option value="DNS">DNS</option>
+            <option value="Ситилинк">Ситилинк</option>
+          </select>
+          <input type="range" min="0" max="30000" v-model="f1.price" />
+        </div>
+        <div class="miniBox">
+          <select v-model="f2.store">
+            <option value="">Все</option>
+            <option value="DNS">DNS</option>
+            <option value="Ситилинк">Ситилинк</option>
+          </select>
+          <input type="range" min="0" max="30000" v-model="f2.price" />
+        </div>
+        <div class="miniBox">
+          <select v-model="f3.store">
+            <option value="">Все</option>
+            <option value="DNS">DNS</option>
+            <option value="Ситилинк">Ситилинк</option>
+          </select>
+          <input type="range" min="0" max="30000" v-model="f3.price" />
+        </div>
+      </div>
+
+      <img class="row" v-on:click="classs==='transform: translateY(-130px)'
+      ?classs='transform: translateY(-66px)'
+      :classs='transform: translateY(-130px)'" src="../assets/downArrow.svg" />
+    </div> -->
+    <div class="minicont">
+      <span>Видеокарта <input type="number" v-model="w1sub" /></span>
+      <input id="Видеокарта" type="range" min="0.01" max="0.99" step="0.01" v-model="w1sub" @change="onchangerangeinput"/>
+
+
+    </div>
+    <div class="minicont">
+      <span>Процессор <input type="number" v-model="w2sub" /></span>
+      <input id="Процессор" type="range" min="0.01" max="0.99" step="0.01" v-model="w2sub" @change="onchangerangeinput"/>
+
+    </div>
+    <div class="minicont">
+      <span>Оперативная память <input type="number" v-model="w3sub" /></span>
+      <input id="Оперативная память" type="range" min="0.01" max="0.99" step="0.01" v-model="w3sub" @change="onchangerangeinput" />
+
+    </div>
+    <div class="groups " style="justify-content:center" >
+      <div class="btnBack" @click="inputschange">
+        <span class="btn" >Применить</span>
+      </div>
+
+    </div>
+
+    <div class="groups groupsName">
+      <span>Бюджет<input type="number" v-model="budget" /></span>
+
+    </div>
+
+
+    <div class="groups">
+      <span @click="page-=10">Влево</span>
+      <span @click="page+=10">Вправо</span>
+    </div>
+    <div class="groups" v-for="(it,key) in allItems3.slice(page, page+10)" :key="key">
+      <CompsItemWeight id="items" v-for="(it1, key1) in it.список" :key="key1" :name="it1['name']" :store="it1['store']"
+        :type="it1['type']" :price="it1['price']" :link="it1['link']" :cpu="it1['cpu']"
+        :transformations='it1.transformations' :w='w1' :image="it1['image']" isImage="true" />
+      <div class="groupRating">
+        <span>Общий рейтинг</span>
+        <span>{{it.общийрейтинг.toFixed(5)}}</span>
+        <span>Общая цена</span>
+        <span>{{it.общаяцена}}</span>
+      </div>
+
+    </div>
+
+
+  </div>
+</template>
+  
+<script>
+
+import { toNumber } from '@vue/shared'
+import CompsItemWeight from './CompsItemWeight.vue'
+import mix from './Mixin.js'
+import { ref } from 'vue'
+
+
+export default {
+  name: 'WeightCoefficients',
+  mixins: [mix],
+  components: {
+    CompsItemWeight
+  },
+  methods: {
+    inputschange() {
+      
+    
+      let allchange = (1- toNumber(this.w1sub) - toNumber(this.w2sub) - toNumber(this.w3sub))
+      this.w1sub = toNumber (this.w1sub+allchange/3)
+      this.w2sub = toNumber (this.w2sub+allchange/3)
+      this.w3sub = toNumber (this.w3sub+allchange/3)
+      this.w1 = this.w1sub
+      this.w2 = this.w2sub
+      this.w3 = this.w3sub
+
+    },
+    onchangerangeinput(event){
+      if(event.target.id==='Видеокарта'){
+        this.w1sub=toNumber (this.w1sub)
+      }
+      if(event.target.id==='Процессор'){
+        this.w2sub=toNumber (this.w2sub)
+      }
+      if(event.target.id==='Оперативная память'){
+        this.w3sub=toNumber (this.w3sub)
+      }
+    }
+  },
+
+  setup() {
+    let f1 = ref({ store: '', price: 300000 })
+    let f2 = ref({ store: '', price: 300000 })
+    let f3 = ref({ store: '', price: 300000 })
+    function prfilt(x) {
+      if(x['type']==='Видеокарта'){
+        return x['price'] <= f1.value.price
+      }
+      if(x['type']==='Процессор'){
+        return x['price'] <= f2.value.price
+      }
+      if(x['type']==='Оперативная память'){
+        return x['price'] <= f3.value.price
+      }
+    }
+    // function budgetfilt(x) {
+    //   return toNumber(x['price'].replace(' ', '')) <= budget
+    // }
+    function stfilt(x, f) {
+      if (f.store === '') { return x }
+      return x['store'] == f.store
+    }
+
+
+    // function onChangeInputs()
+
+
+    return { stfilt, prfilt, f1, f2, f3 }
+  },
+
+  computed: {
+    allItems2: function () {
+
+      /////////////////////////видеокарта///////////////////////////////////
+      let толькочастотавидеокарты = { список: [] }
+      let толькопамятьвидеокарты = { список: [] }
+
+      /////////////////////////Процессор///////////////////////////////////
+      let толькочастотапроцессора = { список: [] }
+      let толькочислопотоков = { список: [] }
+
+      // /////////////////////////Оперативная память///////////////////////////////////
+      let толькообъем = { список: [] }
+      let толькочастотаоперативки = { список: [] }
+
+      let allItems1 = this.allItems.map(x => {
+        if (x['type'] === 'Видеокарта') {
+          x['cpu']['par2'] = toNumber(x['cpu']['par2'])
+          x['cpu']['par8'] = toNumber(x['cpu']['par8'])
+        }
+        if (x['type'] === 'Процессор') {
+          x['cpu']['par2'] = toNumber(x['cpu']['par2'])
+          x['cpu']['par4'] = toNumber(x['cpu']['par4'])
+        }
+        if (x['type'] === 'Оперативная память') {
+          x['cpu']['par1'] = toNumber(x['cpu']['par1'])
+          x['cpu']['par2'] = toNumber(x['cpu']['par2'])
+
+        }
+        x['price'] = toNumber(x['price'])
+        return x
+      })
+      allItems1.map(x => {
+
+        if (x['type'] === 'Видеокарта') {
+          толькочастотавидеокарты.список.push(Number(x['cpu']['par8']))
+          толькопамятьвидеокарты.список.push(Number(x['cpu']['par2']))
+          x.transformations = { видеокартаНорм: { частоставидеокарты: 0, памятьвидеокарты: 0, }, рейтинг: 0 }
+        }
+
+        if (x['type'] === 'Процессор') {
+          толькочастотапроцессора.список.push(Number(x['cpu']['par2']))
+          толькочислопотоков.список.push(Number(x['cpu']['par4']))
+          x.transformations = { процессорНорм: { частостапроцессора: 0, числопотоков: 0, }, рейтинг: 0 }
+        }
+
+        if (x['type'] === 'Оперативная память') {
+          толькообъем.список.push(Number(x['cpu']['par1']))
+          толькочастотаоперативки.список.push(Number(x['cpu']['par2']))
+          x.transformations = { оперативкаНорм: { объем: 0, частотаоперативки: 0, }, рейтинг: 0 }
+        }
+        return x
+      })
+      function getOfArray(numArray) {
+        let max = 0
+        let min = numArray[0]
+
+        numArray.forEach(x => {
+          if (x > max) { max = x }
+          if (x < min) {
+
+            min = x
+          }
+        })
+        return { max: max, min: min }
+      }
+      толькочастотавидеокарты.мах = getOfArray(толькочастотавидеокарты.список).max
+      толькочастотавидеокарты.мин = getOfArray(толькочастотавидеокарты.список).min
+      толькопамятьвидеокарты.мах = getOfArray(толькопамятьвидеокарты.список).max
+      толькопамятьвидеокарты.мин = getOfArray(толькопамятьвидеокарты.список).min
+
+      толькочастотапроцессора.мах = getOfArray(толькочастотапроцессора.список).max
+      толькочастотапроцессора.мин = getOfArray(толькочастотапроцессора.список).min
+      толькочислопотоков.мах = getOfArray(толькочислопотоков.список).max
+      толькочислопотоков.мин = getOfArray(толькочислопотоков.список).min
+
+      толькообъем.мах = getOfArray(толькообъем.список).max
+      толькообъем.мин = getOfArray(толькообъем.список).min
+      толькочастотаоперативки.мах = getOfArray(толькочастотаоперативки.список).max
+      толькочастотаоперативки.мин = getOfArray(толькочастотаоперативки.список).min
+
+
+
+
+      allItems1.map(x => {
+        if (x['type'] === 'Видеокарта') {
+          x.transformations.видеокартаНорм.частоставидеокарты = x['cpu']['par8'] / толькочастотавидеокарты.мах
+          x.transformations.видеокартаНорм.памятьвидеокарты = x['cpu']['par2'] / толькопамятьвидеокарты.мах
+          x.transformations.рейтинг = (x.transformations.видеокартаНорм.частоставидеокарты + x.transformations.видеокартаНорм.памятьвидеокарты) * this.w1
+        }
+
+        if (x['type'] === 'Процессор') {
+          x.transformations.процессорНорм.частостапроцессора = x['cpu']['par2'] / толькочастотапроцессора.мах
+          x.transformations.процессорНорм.числопотоков = x['cpu']['par4'] / толькочислопотоков.мах
+          x.transformations.рейтинг = (x.transformations.процессорНорм.частостапроцессора + x.transformations.процессорНорм.числопотоков) * this.w2
+        }
+
+        if (x['type'] === 'Оперативная память') {
+          x.transformations.оперативкаНорм.объем = x['cpu']['par1'] / толькообъем.мах
+          x.transformations.оперативкаНорм.частотаоперативки = x['cpu']['par2'] / толькочастотаоперативки.мах
+          x.transformations.рейтинг = (x.transformations.оперативкаНорм.объем + x.transformations.оперативкаНорм.частотаоперативки) * this.w3
+        }
+
+
+        return x
+      })
+
+
+
+      return allItems1
+
+    },
+    allItems3: function () {
+      let alls = []
+      let videokards = []
+      let processors = []
+      let memories = []
+      this.allItems2.map(x => {
+        if (x['type'] === 'Видеокарта') { videokards.push(x) }
+        if (x['type'] === 'Процессор') { processors.push(x) }
+        if (x['type'] === 'Оперативная память') { memories.push(x) }
+        return x
+      })
+
+
+
+      videokards.map(x => {
+        processors.map(y => {
+          memories.map(z => {
+            alls.push({
+              список: [x, y, z],
+              общийрейтинг: x.transformations.рейтинг + y.transformations.рейтинг + z.transformations.рейтинг,
+              общаяцена: x['price'] + y['price'] + z['price']
+            })
+
+            return z
+          })
+          return y
+        })
+        return x
+      })
+
+      console.log(alls)
+      
+      // .filter(x=>Number(x.общаяцена) < this.budget)
+
+      return alls.filter(x => x.общаяцена < this.budget).sort((a, b) => b.общийрейтинг - a.общийрейтинг)
+    }
+
+  }
+}
+</script>
+  
+<style scoped>
+.groups {
+  width: 100%;
+  display: flex;
+  height: auto;
+  flex-direction: row;
+  box-sizing: border-box;
+  padding-top: 5px;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+.groups #items{
+  margin: 0 10px;
+}
+
+.groupsName span {
+  width: 100%;
+}
+
+.groups span {
+  font-family: 'ErmilovBold';
+  color: rgb(0, 0, 0);
+  font-size: 25px;
+  margin-bottom: 10px;
+
+
+}
+
+.groupRating {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 170px;
+  width: 40vw;
+
+}
+
+.groupRating span {
+  font-size: 15px;
+}
+
+.container {
+  height: auto;
+  width: 100%;
+  background: #eef0f3;
+  display: flex;
+  justify-content: space-around;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  padding: 0 0;
+  padding-top: 110px;
+}
+
+.filtBox {
+  width: 100%;
+  height: auto;
+  background: #eef0f3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  position: fixed;
+
+  transition: transform .5s;
+}
+
+.minicont {
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-top: 5px;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.minicont span {
+  font-family: 'ErmilovBold';
+  color: rgb(0, 0, 0);
+  font-size: 25px;
+  margin-bottom: 10px;
+  width: 100%;
+
+}
+
+.miniBox {
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+input {
+  width: 100%;
+  border: 3px solid black;
+  font-family: 'ErmilovBold';
+}
+
+select {
+  width: 100%;
+}
+
+select {
+  font-family: 'AktivGroteskCorp';
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0);
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.row {
+  height: 45px;
+}
+
+.mainminibox {
+  display: flex;
+  width: 100%;
+}
+
+.blockForType {
+  height: 79vh;
+  overflow-y: auto;
+  padding: 0 10px;
+  margin-top: 10px;
+  width: 100%;
+  min-width: 150px;
+
+}
+
+.blockForType::-webkit-scrollbar {
+  width: 0;
+}
+
+.btnBack {
+
+  padding: 5px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 1) 48%, #eef0f3 48%);
+  background-size: 300% 300%;
+  background-position: 100% 0%;
+  transition: background-position .3s;
+}
+
+.btnBack:hover {
+  background-position: 100% 100%;
+}
+
+.btnBack span {}
+
+.btn {
+  background: #eef0f3;
+
+}
+</style>
+  
+  
+  
+  
