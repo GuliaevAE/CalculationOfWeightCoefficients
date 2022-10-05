@@ -3,6 +3,7 @@ const mix = {
     data: function () {
         return {
             classs: 'transform: translateY(-90px)',
+            isOpen:'Оперативная память',
             isOn: true,
             w1: 0.01,
             w2: 0.01,

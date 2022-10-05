@@ -6,8 +6,8 @@ import WeightCoefficients from './components/WeightCoefficients.vue'
 export default createRouter({
     history:createWebHashHistory(),
     routes:[
-        {path: '/Container', component:Container, alias:'/'},
-        {path: '/CompilationsContainer', component:CompilationsContainer},
+        {path: '/Container', component:Container},
+        {path: '/CompilationsContainer', component:CompilationsContainer, alias:'/'},
         {path: '/WeightCoefficients', component:WeightCoefficients}
     ]
 })

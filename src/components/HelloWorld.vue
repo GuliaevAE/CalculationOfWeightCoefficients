@@ -1,19 +1,19 @@
 <template>
   <div class="header">
     <!-- <a href="#/Container" class="Каталог">Catalog </a> -->
-    <a href="#/CompilationsContainer" >Compilation</a>
-    <a href="#/WeightCoefficients" >Weight coefficients</a>
+    <a href="#/CompilationsContainer">Compilation</a>
+    <a href="#/WeightCoefficients">Weight</a>
   </div>
-  
+
 </template>
 
 <script>
-  import mix from './Mixin.js'
+import mix from './Mixin.js'
 
 
 export default {
   name: 'HelloWorld',
-  mixins:[mix],
+  mixins: [mix],
   props: {
     msg: String
   }
@@ -30,7 +30,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
   position: fixed;
-  z-index: 20;
+  z-index: 10;
 }
 
 .filtBox {
@@ -46,13 +46,14 @@ export default {
   transition: transform .5s;
 }
 
-.filtBox span{
+.filtBox span {
   font-family: 'ErmilovBold';
   padding: 0 20px;
-  
+
   font-size: 18px;
   background: #eef0f3;
 }
+
 .row {
   height: 45px;
 }
@@ -60,7 +61,7 @@ export default {
 .mainminibox {
   display: flex;
   width: 100%;
-  background:red
+  background: red
 }
 
 
@@ -88,19 +89,21 @@ export default {
   62.5% {
     text-shadow: 5px 5px hsl(89, 100%, 55%);
   }
+
   75% {
     text-shadow: 5px 5px hsl(134, 100%, 55%);
   }
+
   100% {
     text-shadow: 5px 5px hsl(179, 100%, 56%);
   }
-   
+
 }
 
 a {
   text-decoration: none;
   color: black;
-  font-size: 25px;
+  font-size: 20px;
   text-shadow: 1px 1px 1px rgb(234, 234, 234);
   font-family: "CurrentRegular", Helvetica, Arial;
   transition: text-shadow .5s;
@@ -110,5 +113,4 @@ a:hover {
   transform: scale(1.02);
   animation: moveGradient 4s alternate infinite;
 }
-
 </style>

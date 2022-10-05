@@ -1,16 +1,11 @@
 <template>
   <div class="container">
-    <!-- <div class="filtBox " :style="classs">
-      <div class="mainminibox">
-        <span>{{help}}</span>
+    <div class="minicont" v-if="isOpen==='Видеокарта'">
+      <div class="rows">
+        <img class="row left" src="../assets/downArrow.svg" @click="selectpart" />
+        <span>Видеокарта</span>
+        <img class="row right" src="../assets/downArrow.svg" @click='selectpart' />
       </div>
-
-      <img class="row" v-on:click="classs==='transform: translateY(-130px)'
-      ?classs='transform: translateY(-66px)'
-      :classs='transform: translateY(-130px)'" src="../assets/downArrow.svg" />
-    </div> -->
-    <div class="minicont">
-      <span>Видеокарта </span>
       <div class="filters">
         <span>Вес</span>
         <input type="number" v-model="w1" />
@@ -22,8 +17,6 @@
         <input type="range" min="0" max="150000" v-model="f1.price" />
       </div>
       <div class="blockForType">
-
-        <!-- &&prfilt(x, f1) -->
         <CompsItemWeight
           v-for="(it, key) in allItems2.filter(x => x['type'] == 'Видеокарта' &&prfilt(x, f1)&&stfilt(x, f1)).sort((a,b)=>b.transformations.рейтинг - a.transformations.рейтинг)"
           :key="key" :name="it['name']" :store="it['store']" :type="it['type']" :price="it['price']" :link="it['link']"
@@ -31,8 +24,12 @@
       </div>
 
     </div>
-    <div class="minicont">
-      <span>Процессор </span>
+    <div class="minicont" v-if="isOpen==='Процессор'">
+      <div class="rows">
+        <img class="row left" src="../assets/downArrow.svg" @click="selectpart" />
+        <span>Процессор</span>
+        <img class="row right" src="../assets/downArrow.svg" @click='selectpart' />
+      </div>
       <div class="filters">
         <span>Вес</span>
         <input type="number" v-model="w2" />
@@ -45,15 +42,19 @@
       </div>
 
       <div class="blockForType">
-        <!-- &&prfilt(x, f1) -->
         <CompsItemWeight
           v-for="(it, key) in allItems2.filter(x => x['type'] == 'Процессор' &&prfilt(x, f2)&&stfilt(x, f2)).sort((a,b)=>b.transformations.рейтинг - a.transformations.рейтинг)"
           :key="key" :name="it['name']" :store="it['store']" :type="it['type']" :price="it['price']" :link="it['link']"
           :cpu="it['cpu']" :transformations='it.transformations' :w='w2' :image="it['image']" isImage='true' />
       </div>
     </div>
-    <div class="minicont">
-      <span>Оперативная память </span>
+    <div class="minicont" v-if="isOpen==='Оперативная память'">
+      <div class="rows">
+        <img class="row left" src="../assets/downArrow.svg" @click="selectpart" />
+        <span>Оперативная память</span>
+        <img class="row right" src="../assets/downArrow.svg" @click='selectpart' />
+      </div>
+
       <div class="filters">
         <span>Вес</span>
         <input type="number" v-model="w3" />
@@ -65,7 +66,6 @@
         <input type="range" min="0" max="150000" v-model="f3.price" />
       </div>
       <div class="blockForType">
-        <!-- &&prfilt(x, f1) -->
         <CompsItemWeight
           v-for="(it, key) in allItems2.filter(x => x['type'] == 'Оперативная память'&&prfilt(x, f3)&&stfilt(x, f3)).sort((a,b)=>b.transformations.рейтинг - a.transformations.рейтинг)"
           :key="key" :name="it['name']" :store="it['store']" :type="it['type']" :price="it['price']" :link="it['link']"
@@ -80,7 +80,7 @@
 <script>
 
 import { toNumber } from '@vue/shared'
-import CompsItemWeight from './CompsItemWeight.vue'
+import CompsItemWeight from './CompsItemWeight2.vue'
 import mix from './Mixin.js'
 import { ref } from 'vue'
 
@@ -106,7 +106,15 @@ export default {
 
     return { stfilt, prfilt, f1, f2, f3 }
   },
+  methods: {
+    selectpart: function () {
+      console.log(this.isOpen)
+      if (this.isOpen === 'Оперативная память') return this.isOpen = 'Видеокарта'
+      if (this.isOpen === 'Видеокарта') return this.isOpen = 'Процессор'
+      if (this.isOpen === 'Процессор') return this.isOpen = 'Оперативная память'
 
+    }
+  },
   computed: {
     allItems2: function () {
 
@@ -233,43 +241,25 @@ export default {
   justify-content: space-around;
   box-sizing: border-box;
   flex-wrap: wrap;
-  padding: 0 0;
-  padding-top: 110px;
+  padding-top: 70px;
 }
 
-.filtBox {
-  width: 100%;
-  height: auto;
-  background: #eef0f3;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  z-index: 3;
-  position: fixed;
-
-  transition: transform .5s;
-}
 
 .minicont {
-  width: 30vw;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   padding-top: 5px;
   align-items: center;
   padding: 0 10px;
-
-
-
   margin-top: 10px;
-
-
 }
 
 .minicont span {
   font-family: 'ErmilovBold';
   color: rgb(0, 0, 0);
-  font-size: 25px;
+  font-size: 18px;
   margin-bottom: 10px;
   width: 100%;
   transition: text-shadow .5s;
@@ -285,13 +275,13 @@ export default {
 }
 
 input {
-  width: 100%;
   border: 3px solid black;
   font-family: 'ErmilovBold';
 }
 
+input,
 select {
-  width: 100%;
+  width: 99%;
 }
 
 select {
@@ -302,8 +292,36 @@ select {
   border-radius: 5px;
 }
 
+.rows {
+  position: fixed;
+  top: 45px;
+  background: #eef0f3;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 11;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.rows span {
+  width: auto;
+  margin: 0;
+}
+
 .row {
-  height: 45px;
+  height: 25px;
+  padding: 5px 0;
+
+}
+
+.left {
+  transform: rotate(90deg);
+}
+
+.right {
+  transform: rotate(-90deg);
 }
 
 .mainminibox {
@@ -312,9 +330,12 @@ select {
 }
 
 .blockForType {
-  height: 65vh;
+  height: auto;
+  width: 100%;
   overflow-y: auto;
-  padding: 0 10px;
+  padding: 0 17px;
+  box-sizing:border-box;
+  
 
 }
 
@@ -322,7 +343,7 @@ select {
   width: 0;
 }
 
-.filters{
+.filters {
   width: 100%;
 }
 </style>

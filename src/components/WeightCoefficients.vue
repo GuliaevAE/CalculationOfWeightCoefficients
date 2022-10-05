@@ -34,24 +34,27 @@
       :classs='transform: translateY(-130px)'" src="../assets/downArrow.svg" />
     </div> -->
     <div class="minicont">
-      <span>Видеокарта <input type="number" v-model="w1sub" /></span>
-      <input id="Видеокарта" type="range" min="0.01" max="0.99" step="0.01" v-model="w1sub" @change="onchangerangeinput"/>
+      <span>В.карта <input type="number" v-model="w1sub" /></span>
+      <input id="Видеокарта" type="range" min="0.01" max="0.99" step="0.01" v-model="w1sub"
+        @change="onchangerangeinput" />
 
 
     </div>
     <div class="minicont">
-      <span>Процессор <input type="number" v-model="w2sub" /></span>
-      <input id="Процессор" type="range" min="0.01" max="0.99" step="0.01" v-model="w2sub" @change="onchangerangeinput"/>
+      <span>CPU <input type="number" v-model="w2sub" /></span>
+      <input id="Процессор" type="range" min="0.01" max="0.99" step="0.01" v-model="w2sub"
+        @change="onchangerangeinput" />
 
     </div>
     <div class="minicont">
-      <span>Оперативная память <input type="number" v-model="w3sub" /></span>
-      <input id="Оперативная память" type="range" min="0.01" max="0.99" step="0.01" v-model="w3sub" @change="onchangerangeinput" />
+      <span>RAM <input type="number" v-model="w3sub" /></span>
+      <input id="Оперативная память" type="range" min="0.01" max="0.99" step="0.01" v-model="w3sub"
+        @change="onchangerangeinput" />
 
     </div>
-    <div class="groups " style="justify-content:center" >
+    <div class="groups " style="justify-content:center">
       <div class="btnBack" @click="inputschange">
-        <span class="btn" >Применить</span>
+        <span class="btn">Применить</span>
       </div>
 
     </div>
@@ -62,20 +65,23 @@
     </div>
 
 
-    <div class="groups">
+    <div class="groups forArrows">
       <span @click="page-=10">Влево</span>
       <span @click="page+=10">Вправо</span>
     </div>
     <div class="groups" v-for="(it,key) in allItems3.slice(page, page+10)" :key="key">
-      <CompsItemWeight id="items" v-for="(it1, key1) in it.список" :key="key1" :name="it1['name']" :store="it1['store']"
-        :type="it1['type']" :price="it1['price']" :link="it1['link']" :cpu="it1['cpu']"
-        :transformations='it1.transformations' :w='w1' :image="it1['image']" isImage="true" />
       <div class="groupRating">
-        <span>Общий рейтинг</span>
-        <span>{{it.общийрейтинг.toFixed(5)}}</span>
-        <span>Общая цена</span>
-        <span>{{it.общаяцена}}</span>
+        <span>Общая цена: {{it.общаяцена}}₽</span>
+        <span>Общий рейтинг: {{it.общийрейтинг.toFixed(5)}}</span>
+
       </div>
+      <div class="groupsData">
+        <CompsItemWeight id="items" v-for="(it1, key1) in it.список" :key="key1" :name="it1['name']"
+          :store="it1['store']" :type="it1['type']" :price="it1['price']" :link="it1['link']" :cpu="it1['cpu']"
+          :transformations='it1.transformations' :w='w1' :image="it1['image']" isImage="true" />
+      </div>
+
+
 
     </div>
 
@@ -86,7 +92,7 @@
 <script>
 
 import { toNumber } from '@vue/shared'
-import CompsItemWeight from './CompsItemWeight.vue'
+import CompsItemWeight from './CompsItemWeight2.vue'
 import mix from './Mixin.js'
 import { ref } from 'vue'
 
@@ -99,26 +105,26 @@ export default {
   },
   methods: {
     inputschange() {
-      
-    
-      let allchange = (1- toNumber(this.w1sub) - toNumber(this.w2sub) - toNumber(this.w3sub))
-      this.w1sub = toNumber (this.w1sub+allchange/3)
-      this.w2sub = toNumber (this.w2sub+allchange/3)
-      this.w3sub = toNumber (this.w3sub+allchange/3)
+
+
+      let allchange = (1 - toNumber(this.w1sub) - toNumber(this.w2sub) - toNumber(this.w3sub))
+      this.w1sub = toNumber(this.w1sub + allchange / 3)
+      this.w2sub = toNumber(this.w2sub + allchange / 3)
+      this.w3sub = toNumber(this.w3sub + allchange / 3)
       this.w1 = this.w1sub
       this.w2 = this.w2sub
       this.w3 = this.w3sub
 
     },
-    onchangerangeinput(event){
-      if(event.target.id==='Видеокарта'){
-        this.w1sub=toNumber (this.w1sub)
+    onchangerangeinput(event) {
+      if (event.target.id === 'Видеокарта') {
+        this.w1sub = toNumber(this.w1sub)
       }
-      if(event.target.id==='Процессор'){
-        this.w2sub=toNumber (this.w2sub)
+      if (event.target.id === 'Процессор') {
+        this.w2sub = toNumber(this.w2sub)
       }
-      if(event.target.id==='Оперативная память'){
-        this.w3sub=toNumber (this.w3sub)
+      if (event.target.id === 'Оперативная память') {
+        this.w3sub = toNumber(this.w3sub)
       }
     }
   },
@@ -128,13 +134,13 @@ export default {
     let f2 = ref({ store: '', price: 300000 })
     let f3 = ref({ store: '', price: 300000 })
     function prfilt(x) {
-      if(x['type']==='Видеокарта'){
+      if (x['type'] === 'Видеокарта') {
         return x['price'] <= f1.value.price
       }
-      if(x['type']==='Процессор'){
+      if (x['type'] === 'Процессор') {
         return x['price'] <= f2.value.price
       }
-      if(x['type']==='Оперативная память'){
+      if (x['type'] === 'Оперативная память') {
         return x['price'] <= f3.value.price
       }
     }
@@ -296,7 +302,7 @@ export default {
       })
 
       console.log(alls)
-      
+
       // .filter(x=>Number(x.общаяцена) < this.budget)
 
       return alls.filter(x => x.общаяцена < this.budget).sort((a, b) => b.общийрейтинг - a.общийрейтинг)
@@ -311,15 +317,19 @@ export default {
   width: 100%;
   display: flex;
   height: auto;
-  flex-direction: row;
+  flex-direction: column;
   box-sizing: border-box;
   padding-top: 5px;
   align-items: center;
   padding: 0 20px;
-  margin-bottom: 20px;
+
+  padding-top:10px ;
 }
-.groups #items{
-  margin: 0 10px;
+
+
+.groups.forArrows {
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .groupsName span {
@@ -329,8 +339,8 @@ export default {
 .groups span {
   font-family: 'ErmilovBold';
   color: rgb(0, 0, 0);
-  font-size: 25px;
-  margin-bottom: 10px;
+  font-size: 18px;
+
 
 
 }
@@ -338,15 +348,18 @@ export default {
 .groupRating {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  height: 170px;
-  width: 40vw;
+  margin-top: 20px;
+  margin-bottom: 10px;
+
 
 }
 
 .groupRating span {
   font-size: 15px;
+  font-weight: 800;
+
 }
 
 .container {
@@ -358,7 +371,7 @@ export default {
   box-sizing: border-box;
   flex-wrap: wrap;
   padding: 0 0;
-  padding-top: 110px;
+  padding-top: 60px;
 }
 
 .filtBox {
@@ -381,13 +394,14 @@ export default {
   box-sizing: border-box;
   padding-top: 5px;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 10px;
 }
+
 
 .minicont span {
   font-family: 'ErmilovBold';
   color: rgb(0, 0, 0);
-  font-size: 25px;
+  font-size: 18px;
   margin-bottom: 10px;
   width: 100%;
 
@@ -402,8 +416,14 @@ export default {
   padding: 10px;
 }
 
+.₽::after {
+  content: ' ₽';
+  font-weight: 800;
+  font-size: 16px;
+}
+
 input {
-  width: 100%;
+  width: 99%;
   border: 3px solid black;
   font-family: 'ErmilovBold';
 }
@@ -456,10 +476,26 @@ select {
   background-position: 100% 100%;
 }
 
-.btnBack span {}
+
 
 .btn {
   background: #eef0f3;
+
+}
+
+@media (min-width: 750px) {
+
+  .groups #items {
+    width: auto;
+    margin: 0 5px;
+
+  }
+
+  .groupsData {
+
+    display: flex;
+    flex-direction: row;
+  }
 
 }
 </style>

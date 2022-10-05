@@ -3,7 +3,8 @@
 
 
         <div class="data">
-            <div class="img" v-if="isImage==='true' && type!=='Видеокарта'" >
+
+            <!-- <div class="img" v-if="isImage==='true' && type!=='Видеокарта'" >
                 <img :src="image" />
             </div>
             <div class="img" v-if="isImage==='true' && type==='Видеокарта' && !isHov" >
@@ -11,10 +12,13 @@
             </div>
             <div class="img rotateZ" v-if="isImage==='true' && type==='Видеокарта' && isHov" >
                 <img :src="image" />
-            </div>
+            </div> -->
             <div class="divName">
+                <div class="nameAndStore">
+                    <span id="store">{{store}}</span>
+                    <span class="title">{{name}}</span>
+                </div>
 
-                <span class="title">{{name}}</span>
 
                 <div v-if="isHov" class="deskr">
                     <div class="hov" v-if="type==='Процессор'">
@@ -40,39 +44,46 @@
                 </div>
             </div>
             <div class="divOther">
-                <span class="price ₽">{{price}}</span>
-                
-                <a target="_blank" :href=link>
-                    <!-- <div :class="thiseStore">{{store}}</div> -->
+                <span class="price">{{price}}₽</span>
+                <div class="img " v-if="isImage==='true' && isHov">
+                    <img :src="image" />
+
+                </div>
+                <!-- <a target="_blank" :href=link>
+                    <div :class="thiseStore">{{store}}</div>
                     <img  src="../assets/store.svg" style="height:50px; width:150px" />
-                </a>
+                </a> -->
             </div>
         </div>
 
 
         <div class="footer">
             <div v-if="type==='Видеокарта'">
-                <span>Рейтинг: {{transformations.рейтинг}}</span>
-                <div v-if="isHov" style="display:flex;flex-direction:column;">
-                    <span>Частота: {{transformations.видеокартаНорм.частоставидеокарты}}</span>
-                    <span>Число потоков: {{transformations.видеокартаНорм.памятьвидеокарты}}</span>
+                <div>
+                    <span>Рейтинг: {{transformations.рейтинг.toFixed(5)}}</span>
+                    <div v-if="isHov" style="display:flex;flex-direction:column;">
+                        <span>Частота: {{transformations.видеокартаНорм.частоставидеокарты.toFixed(5)}}</span>
+                        <span>Число потоков: {{transformations.видеокартаНорм.памятьвидеокарты.toFixed(5)}}</span>
+                    </div>
                 </div>
+
             </div>
             <div v-if="type==='Процессор'">
-                <span>Рейтинг: {{transformations.рейтинг}}</span>
+                <span>Рейтинг: {{transformations.рейтинг.toFixed(5)}}</span>
                 <div v-if="isHov" style="display:flex;flex-direction:column;">
-                    <span>Частота: {{transformations.процессорНорм.частостапроцессора}}</span>
-                    <span>Число потоков: {{transformations.процессорНорм.числопотоков}}</span>
+                    <span>Частота: {{transformations.процессорНорм.частостапроцессора.toFixed(5)}}</span>
+                    <span>Число потоков: {{transformations.процессорНорм.числопотоков.toFixed(5)}}</span>
                 </div>
             </div>
             <div v-if="type==='Оперативная память'">
-                <span>Рейтинг: {{transformations.рейтинг}}</span>
+                <span>Рейтинг: {{transformations.рейтинг.toFixed(5)}}</span>
                 <div v-if="isHov" style="display:flex;flex-direction:column;">
-                    <span>Объём: {{transformations.оперативкаНорм.объем}}</span>
-                    <span>Частота: {{transformations.оперативкаНорм.частотаоперативки}}</span>
+                    <span>Объём: {{transformations.оперативкаНорм.объем.toFixed(5)}}</span>
+                    <span>Частота: {{transformations.оперативкаНорм.частотаоперативки.toFixed(5)}}</span>
                 </div>
             </div>
-
+            <span v-if="isHov" id="link" style="position:absolute;bottom:5px;right:15px; font-size:40px"><a
+                    target="_blank" :href=link>+</a></span>
         </div>
 
     </div>
@@ -109,6 +120,7 @@ export default {
 <!-- eef0f3 -->
 <style scoped>
 .item {
+
     min-height: 50px;
     width: 100%;
     position: relative;
@@ -134,14 +146,19 @@ export default {
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
+    justify-content: space-between;
+    height: 100%;
 }
 
-.item img {
-    height: auto;
-    width: 100%;
-    max-height: 150px;
+
+.nameAndStore {
+    display: flex;
+    flex-direction: column;
 }
 
+#store {
+    color: rgb(255, 136, 0)
+}
 
 
 @keyframes moveGradient {
@@ -152,26 +169,42 @@ export default {
 
 a {
     text-decoration: none;
-    color: red
+    color: white;
+    transition: transform .3s;
+}
+
+#link {
+    display: block;
+    transition: transform .3s, text-shadow .3s;
+    font-weight: 1000;
+}
+
+#link:hover {
+    text-shadow: 0 0 5px black;
+    transform: rotate(45deg);
+
 }
 
 .divName {
-    width: 70%;
+    width: auto;
     justify-content: center;
     align-self: center;
     font-family: 'AktivGroteskCorp';
     color: rgb(0, 0, 0);
     font-size: 15px;
-    
+
 }
 
 .divOther {
-    width: 30%;
+    width: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-weight: 700;
+    font-size: 25px;
+    margin-left: 20px;
+
 }
 
 .st {
@@ -225,33 +258,36 @@ a {
     color: white
 }
 
-.img {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 5px;
-}
-.rotateZ{
-    transform:rotate(90deg)
+
+.img img {
+    height: 100px;
+    width: 100px;
 }
 
-.rotateZ img{
+.rotateZ {
+    transform: rotate(90deg)
+}
+
+.rotateZ img {
     transform: scale(1.2);
 }
 
 .МГц::after {
     content: 'МГц';
 }
+
 .ГГц::after {
     content: 'ГГц';
 }
+
 .Гб::after {
     content: 'Гб';
 }
-.₽::after{
-    content:' ₽';
- font-weight: 700;
- font-size: 20px;
+
+.₽::after {
+    content: ' ₽';
+    font-weight: 700;
+    font-size: 20px;
 }
 
 .title {
@@ -266,18 +302,17 @@ a {
 
 .item:hover {
     transform: scale(1.02);
-    background:  linear-gradient(60deg,hsl(224, 100%, 58%),
-    hsl(269, 100%, 56%),
-    hsl(314, 100%, 57%),
-    hsl(359, 100%, 54%),
-    hsl(44, 100%, 55%),
-    hsl(89, 100%, 55%),
-    hsl(134, 100%, 55%),
-    hsl(179, 100%, 56%));
+    background: linear-gradient(60deg, hsl(224, 100%, 58%),
+            hsl(269, 100%, 56%),
+            hsl(314, 100%, 57%),
+            hsl(359, 100%, 54%),
+            hsl(44, 100%, 55%),
+            hsl(89, 100%, 55%),
+            hsl(134, 100%, 55%),
+            hsl(179, 100%, 56%));
     background-size: 300% 300%;
     background-position: 0 50%;
     box-shadow: 0 5px 5px rgb(136, 136, 136);
     animation: moveGradient 4s alternate infinite;
 }
-
 </style>
