@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <!-- <a href="#/Container" class="Каталог">Catalog </a> -->
-    <a href="#/CompilationsContainer">Compilation</a>
+    <a href="#/CompilationsContainer">CCCompilation</a>
     <a href="#/WeightCoefficients">Weight</a>
   </div>
 
